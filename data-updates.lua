@@ -1,3 +1,5 @@
+for k, v in pairs(data.raw.resource) do
+
 	data:extend{
 		{
 			type = "custom-input",
@@ -7,7 +9,7 @@
 		},
 		{
 			type = "item",
-			name = "resourcehighlighter-treasure",
+			name = "resourcehighlighter-treasure-"..v.name,
 			icons = {
 				{
 					icon = "__resourcehighlighter__/graphics/icons/glow.png",
@@ -15,8 +17,8 @@
 					scale = 2,
 				},
 				{
-					icon = "__resourcehighlighter__/graphics/icons/treasure.png",
-					icon_size = 64,
+					icon = v.icon or v.icons[1].icon,
+					icon_size = v.icon_size or v.icons[1].icon_size,
 					scale = 1,
 				}
 			},
@@ -27,3 +29,4 @@
 			flags = {"hidden"}
 		},
 	}
+end

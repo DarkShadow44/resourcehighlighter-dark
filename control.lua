@@ -270,14 +270,24 @@ local search_chunk_res=function(params,markedStack)
 
         end
 
+        local amount = originalAmount*currentCount/originalCount;
+        local amount_str = tostring(amount);
+
+        if (amount > 1000000) then
+            amount_str = tostring(math.floor(amount / 100000) / 10).."M";
+        elseif (amount > 1000) then
+            amount_str = tostring(math.floor(amount / 1000)).."k";
+        end
+
         -- This formula is a very rough approximation of how much ore is left in the ore patch.
         -- Since the goal is to make the ore patch disappear after it's mostly mined out, the approximation is good enough.
         if originalAmount*currentCount/originalCount>=settings.global["resourcehighlighter-minimum-size"].value then
             local cx,cy=centroid.x/currentCount,centroid.y/currentCount
             local player_rec=get_player_rec(params.player.index)
             local chart_tag=params.player.force.add_chart_tag(params.surface,{
-                icon={type="item",name="resourcehighlighter-treasure"},
-                position={x=cx-24, y=cy},
+                icon={type="item",name="resourcehighlighter-treasure-"..params.name},
+                position={x=cx, y=cy},
+                text=amount_str,
                 last_user=params.player
             })
             table.insert(player_rec.chart_tags,chart_tag)

@@ -11,20 +11,20 @@ Press SHIFT + H (or the key you've configured for Resource Highlighter) to open 
 The menu displays every vanilla and modded resource available in your game.
 Each row shows you the ore (or fluid) produced and a list of machines capable of mining it.
 Choose which resources you want to find by clicking on the boxes beside them.
-The mod will place a treasure box beside every resource patch that your team is able to see.
-When you're finished, close the menu by clicking the 'X' or by pressing SHIFT + H.  The treasure boxes will disappear.
+The mod will place a label for every resource patch that your team is able to see.
+When you're finished, close the menu by clicking the 'X' or by pressing SHIFT + H.  The labels will disappear.
 Click 'All' to check all boxes.
 Click 'None' to uncheck all boxes.
-Click 'Refresh' to update the treasure boxes after revealing more of the map or changing the settings (A refresh also happens automatically each time you open the menu or make a new selection.)
+Click 'Refresh' to update the labels after revealing more of the map or changing the settings (A refresh also happens automatically each time you open the menu or make a new selection.)
 
 Limitations
 ===========
 
-1. Each person on your team will see your treasure boxes in addition to their own.
+1. Each person on your team will see your labels in addition to their own.
 This is an unfortunate limitation of the Factorio API (add_chart_tag() accepts a force parameter, not a player parameter.)
 
 2. The mod is unaware of changes to resources made by other mods such as Ore Eraser.
-If you erase a resource patch and open Resource Highlighter, a treasure box will still appear beside it.
+If you erase a resource patch and open Resource Highlighter, a label box will still appear on it.
 To work around the problem, use the /rh_rescan console command.  Typing /rh_rescan in the console will reset the mod's internal data
 and rescan every chunk for every resource.
 
