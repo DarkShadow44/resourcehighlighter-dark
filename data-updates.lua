@@ -12,7 +12,7 @@ for k, v in pairs(data.raw.resource) do
 			name = "resourcehighlighter-treasure-"..v.name,
 			icons = {
 				{
-					icon = "__resourcehighlighter__/graphics/icons/glow.png",
+					icon = "__resourcehighlighter-dark__/graphics/icons/glow.png",
 					icon_size = 64,
 					scale = 2,
 				},
