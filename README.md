@@ -1,18 +1,18 @@
 Resource Highlighter
 ====================
--- by Vamalo --
+-- Original mod by Vamalo --
 
 This mod looks for resources in areas that you've charted and highlights them on the map using a highly visible glowing treasure box.  Although the mod has little value in Vanilla, it's helpful for mods that add dozens of new resources with similar map colors.  I designed the mod with speed in mind.  The mod scans new chunks in the background as you explore so that it's able to immediately show you a resource of interest.
 
 Directions
 ==========
 
-Press SHIFT + G (or the key you've configured for Resource Highlighter) to open the menu.
+Press SHIFT + H (or the key you've configured for Resource Highlighter) to open the menu.
 The menu displays every vanilla and modded resource available in your game.
 Each row shows you the ore (or fluid) produced and a list of machines capable of mining it.
 Choose which resources you want to find by clicking on the boxes beside them.
 The mod will place a treasure box beside every resource patch that your team is able to see.
-When you're finished, close the menu by clicking the 'X' or by pressing SHIFT + G.  The treasure boxes will disappear.
+When you're finished, close the menu by clicking the 'X' or by pressing SHIFT + H.  The treasure boxes will disappear.
 Click 'All' to check all boxes.
 Click 'None' to uncheck all boxes.
 Click 'Refresh' to update the treasure boxes after revealing more of the map or changing the settings (A refresh also happens automatically each time you open the menu or make a new selection.)
@@ -43,10 +43,4 @@ This approach has the advantage of being fast and minimizing the amount of data 
 
 Changelog
 ==========
-v1.0.0: Initial release.
-v1.0.1: Fixed a mistake that was making duplicate chart tags appear.
-v1.1.0: Resources are now sorted alphabetically.
-        Menu displays required mining fluid.
-        Boxes are automatically unchecked when you close the window.
-        Default key changed to SHIFT+H to avoid conflict with Pyanodon's mods.
-v1.1.1: Fixed migration-related crash.
+See Changelog tab

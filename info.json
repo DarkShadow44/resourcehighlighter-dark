@@ -1,9 +1,9 @@
 {
-	"name":"resourcehighlighter",
-	"author":"Vamalo",
-	"version":"1.1.1",
-	"factorio_version": "0.18",
-	"title":"Resource Highlighter",
+	"name":"resourcehighlighter-dark",
+	"author":"Darkshadow44, Vamalo (Original mod)",
+	"version":"2.0.0",
+	"factorio_version": "1.1",
+	"title":"Resource Highlighter (Dark's Version)",
 	"homepage":"",
 	"description":"A tool for highlighting resources in chunks that you've already charted.",
 	"dependencies": ["base >= 0.18.0"]
