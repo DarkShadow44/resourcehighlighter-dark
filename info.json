@@ -1,0 +1,10 @@
+{
+	"name":"resourcehighlighter",
+	"author":"Vamalo",
+	"version":"1.1.1",
+	"factorio_version": "0.18",
+	"title":"Resource Highlighter",
+	"homepage":"",
+	"description":"A tool for highlighting resources in chunks that you've already charted.",
+	"dependencies": ["base >= 0.18.0"]
+}
