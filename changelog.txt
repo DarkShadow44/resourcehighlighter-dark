@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.2
+  Changes:
+	- Fix crash with SpaceExploration
+	- Hide SpaceExploration core fragments from GUI
+---------------------------------------------------------------------------------------------------
 Version: 2.0.1
   Changes:
 	- Fix crash due to name change
