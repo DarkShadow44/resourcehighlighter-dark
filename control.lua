@@ -376,6 +376,9 @@ local open_gui=function(player)
         top.scroller.add({type="table",name="table",column_count=4})
         local table=top.scroller.table
         for _,name in ipairs(get_player_resource_order(player_rec)) do
+            if name:find("^se%-core%-fragment") ~= nil then -- Hide SpaceExploration core fragments
+                goto skip_to_next;
+            end
             local resource_rec=global.resource_recs[name]
             table.add({type="checkbox",name="resourcehighlighter_check_"..name,state=player_rec.choices[name]})
 
@@ -392,6 +395,7 @@ local open_gui=function(player)
                 local b=f.add({type="choose-elem-button",elem_type="item",item=miner.item})
                 b.locked=true
             end
+            ::skip_to_next::
         end
         top.add({type="flow",name="button_bar",direction="horizontal"})
         local check_all=top.button_bar.add({type="button",name="resourcehighlighter_check_all",caption={"resourcehighlighter_check_all"}})
