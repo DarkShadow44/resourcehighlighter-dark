@@ -279,6 +279,10 @@ local search_chunk_res=function(params,markedStack)
             amount_str = tostring(math.floor(amount / 1000)).."k";
         end
 
+        if game.item_prototypes["resourcehighlighter-treasure-"..params.name] == nil then
+            return;
+        end
+
         -- This formula is a very rough approximation of how much ore is left in the ore patch.
         -- Since the goal is to make the ore patch disappear after it's mostly mined out, the approximation is good enough.
         if originalAmount*currentCount/originalCount>=settings.global["resourcehighlighter-minimum-size"].value then
