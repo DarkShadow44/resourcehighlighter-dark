@@ -1,5 +1,4 @@
 for k, v in pairs(data.raw.resource) do
-
 	data:extend{
 		{
 			type = "custom-input",
