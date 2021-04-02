@@ -557,9 +557,12 @@ commands.add_command("rh_rescan", {"resourcehighlighter_rescan_help"}, function(
 end)
 
 script.on_configuration_changed(function(configuration_changed_data)
-    local mod_change = configuration_changed_data.mod_changes["resourcehighlighter"]
-    if mod_change and mod_change.old_version and mod_change.old_version ~= mod_change.new_version then
-        reset()
+    for _,player in pairs(game.players) do
+        if is_gui_open(player) then
+            close_gui(player)
+        end
     end
+
+    reset()
 end)
 
