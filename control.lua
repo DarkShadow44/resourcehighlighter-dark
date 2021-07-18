@@ -153,6 +153,9 @@ script.on_event(defines.events.on_string_translated, function(event)
 end)
 
 local scan_chunk=function(surface,position)
+    if not surface.valid then
+        return
+    end
 
     global.scanned_chunks=global.scanned_chunks+1
 
