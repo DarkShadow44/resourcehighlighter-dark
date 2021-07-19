@@ -471,7 +471,7 @@ script.on_event(defines.events.on_gui_click, function(event)
 end)
 
 script.on_event(defines.events.on_tick, function(event)
-    while #global.chunks_to_scan>0 and global.scanned_chunks<16 and global.scanned_resources<1024 do
+    while #global.chunks_to_scan>0 and global.scanned_chunks<64 and global.scanned_resources<1024 do
         local chunk_to_scan=global.chunks_to_scan[#global.chunks_to_scan]
         global.chunks_to_scan[#global.chunks_to_scan]=nil
         scan_chunk(chunk_to_scan.surface,chunk_to_scan.position)
