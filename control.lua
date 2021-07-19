@@ -83,7 +83,6 @@ local function init()
 
     global.chunk_recs={}
     global.chunks_to_scan={}
-    global.rescan_player_indices=nil
 
     global.scanned_chunks=0
     global.scanned_resources=0
@@ -93,6 +92,7 @@ local function init()
             table.insert(global.chunks_to_scan,{surface=surface,position={x=chunk.x,y=chunk.y}})
         end
     end
+    global.chunks_to_scan_max = #global.chunks_to_scan
 end
 
 script.on_init(function()
@@ -479,16 +479,21 @@ script.on_event(defines.events.on_tick, function(event)
     global.scanned_chunks=0
     global.scanned_resources=0
 
-    if #global.chunks_to_scan==0 and global.rescan_player_indices then
-        for index,_ in pairs(global.rescan_player_indices) do
-            local player=game.players[index]
-            if player and player.valid then
-                player.print({"resourcehighlighter_scan_complete"})
-            end
+    if global.chunks_to_scan_max > 0 then
+        if global.chunks_to_scan_time == nil then
+            global.chunks_to_scan_time = 0
         end
-        global.rescan_player_indices=nil
+        global.chunks_to_scan_time = global.chunks_to_scan_time + 1
+        if global.chunks_to_scan_time > 60 * 15 then
+            global.chunks_to_scan_time = 0
+            local percent = math.floor((global.chunks_to_scan_max - #global.chunks_to_scan) / global.chunks_to_scan_max * 100)
+            game.print({"resourcehighlighter_scan_percent", percent})
+        end
+        if #global.chunks_to_scan == 0 then
+            game.print({"resourcehighlighter_scan_complete"})
+            global.chunks_to_scan_max = 0
+        end
     end
-
 end)
 
 script.on_event(defines.events.on_player_changed_force, function(event)
@@ -553,10 +558,9 @@ commands.add_command("rh_rescan", {"resourcehighlighter_rescan_help"}, function(
             table.insert(global.chunks_to_scan,{surface=surface,position={x=chunk.x,y=chunk.y}})
         end
     end
+    global.chunks_to_scan_max = #global.chunks_to_scan
 
-    game.players[event.player_index].print({"resourcehighlighter_scan_started"})
-    global.rescan_player_indices=global.rescan_player_indices or {}
-    global.rescan_player_indices[event.player_index]=true
+    game.print({"resourcehighlighter_scan_started"})
 end)
 
 script.on_configuration_changed(function(configuration_changed_data)
