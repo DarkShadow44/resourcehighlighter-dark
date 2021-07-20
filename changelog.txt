@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.0.5
+  Changes:
+	- Fix crash with invalid surfaces
+	- Add resource scan progress messages (every 15s)
+	- Speed up scan speed 4x (might cause a bit more lag, but is quicker)
+---------------------------------------------------------------------------------------------------
 Version: 2.0.4
   Changes:
 	- Fix crash when removing mods
