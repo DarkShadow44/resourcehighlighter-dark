@@ -320,10 +320,12 @@ local update_labels=function(player)
     local markedStack={}
     for s,chunk_layer in pairs(global.chunk_recs) do
         local surface=game.surfaces[s]
-        for x,chunk_col in pairs(chunk_layer) do
-            for y,chunk_rec in pairs(chunk_col) do
-                for name,chunk_res in pairs(chunk_rec) do
-                    search_chunk_res({player=player,surface=surface,x=x,y=y,name=name},markedStack)
+        if surface.valid then
+            for x,chunk_col in pairs(chunk_layer) do
+                for y,chunk_rec in pairs(chunk_col) do
+                    for name,chunk_res in pairs(chunk_rec) do
+                        search_chunk_res({player=player,surface=surface,x=x,y=y,name=name},markedStack)
+                    end
                 end
             end
         end
