@@ -384,6 +384,11 @@ local open_gui=function(player)
             if name:find("^se%-core%-fragment") ~= nil then -- Hide SpaceExploration core fragments
                 goto skip_to_next;
             end
+            if settings.global["resourcehighlighter-highlight-all"].value then
+                for name,resource_rec in pairs(global.resource_recs) do
+                    player_rec.choices[name]=true
+                end
+            end
             local resource_rec=global.resource_recs[name]
             table.add({type="checkbox",name="resourcehighlighter_check_"..name,state=player_rec.choices[name]})
 
