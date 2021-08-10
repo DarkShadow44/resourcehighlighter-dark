@@ -5,6 +5,7 @@ Version: 2.0.6
 	- Fix crash when surface is null
 	- Add setting to select all by default
 	- Remove refresh button
+	- Add french locale
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.5
   Changes:
