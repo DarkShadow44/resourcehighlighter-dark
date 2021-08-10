@@ -153,7 +153,7 @@ script.on_event(defines.events.on_string_translated, function(event)
 end)
 
 local scan_chunk=function(surface,position)
-    if not surface.valid then
+    if (not surface) or (not surface.valid) then
         return
     end
 
@@ -320,7 +320,7 @@ local update_labels=function(player)
     local markedStack={}
     for s,chunk_layer in pairs(global.chunk_recs) do
         local surface=game.surfaces[s]
-        if surface.valid then
+        if surface and surface.valid then
             for x,chunk_col in pairs(chunk_layer) do
                 for y,chunk_rec in pairs(chunk_col) do
                     for name,chunk_res in pairs(chunk_rec) do
