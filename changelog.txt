@@ -4,6 +4,7 @@ Version: 2.0.6
 	- Fix another crash with invalid surfaces
 	- Fix crash when surface is null
 	- Add setting to select all by default
+	- Remove refresh button
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.5
   Changes:

@@ -414,9 +414,6 @@ local open_gui=function(player)
         local check_none=top.button_bar.add({type="button",name="resourcehighlighter_check_none",caption={"resourcehighlighter_check_none"}})
         check_none.style.horizontally_stretchable=true
         check_none.style.minimal_width=72
-        local refresh=top.button_bar.add({type="button",name="resourcehighlighter_refresh",caption={"resourcehighlighter_refresh"}})
-        refresh.style.horizontally_stretchable=true
-        refresh.style.minimal_width=72
         if player_rec.frame_location then
             top.location=player_rec.frame_location
         else
@@ -472,8 +469,6 @@ script.on_event(defines.events.on_gui_click, function(event)
         set_all_check_boxes(player,true)
     elseif event.element.name=="resourcehighlighter_check_none" then
         set_all_check_boxes(player,false)
-    elseif event.element.name=="resourcehighlighter_refresh" then
-        update_labels(player)
     end
 end)
 
