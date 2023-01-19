@@ -453,6 +453,17 @@ script.on_event("resourcehighlighter-toggle", function(event)
     end
 end)
 
+script.on_event(defines.events.on_lua_shortcut, function(event)
+    if event.prototype_name == "resourcehighlighter-toggle" then
+        local player=game.players[event.player_index]
+        if is_gui_open(player) then
+            close_gui(player)
+        else
+            open_gui(player)
+        end
+    end
+end)
+
 script.on_event(defines.events.on_gui_checked_state_changed, function(event)
     local player=game.players[event.player_index]
     local player_rec=get_player_rec(player.index)

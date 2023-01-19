@@ -7,6 +7,20 @@ data:extend {
     }
 }
 
+data:extend {
+    {
+        type = "shortcut",
+        name = "resourcehighlighter-toggle",
+        action = "lua",
+        icon = {
+            filename = "__resourcehighlighter-dark__/graphics/icons/shortcut.png",
+            width = 64,
+            height = 64,
+            scale = 1
+        }
+    }
+}
+
 for k, v in pairs(data.raw.resource) do
 	data:extend {
 		{
