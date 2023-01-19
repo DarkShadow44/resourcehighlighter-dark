@@ -542,6 +542,7 @@ script.on_event(defines.events.on_resource_depleted, function(event)
 end)
 
 local function reset()
+    game.print({"resourcehighlighter_scan_started"})
     init()
     for _,player in pairs(game.players) do
         init_player(player)
@@ -550,20 +551,6 @@ end
 
 commands.add_command("rh_reset", {"resourcehighlighter_rescan_reset"}, function(event)
     reset()
-end)
-
-commands.add_command("rh_rescan", {"resourcehighlighter_rescan_help"}, function(event)
-    global.chunk_recs={}
-    global.chunks_to_scan={}
-
-    for _,surface in pairs(game.surfaces) do
-        for chunk in surface.get_chunks() do
-            table.insert(global.chunks_to_scan,{surface=surface,position={x=chunk.x,y=chunk.y}})
-        end
-    end
-    global.chunks_to_scan_max = #global.chunks_to_scan
-
-    game.print({"resourcehighlighter_scan_started"})
 end)
 
 script.on_configuration_changed(function(configuration_changed_data)
