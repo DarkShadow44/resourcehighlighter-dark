@@ -384,6 +384,9 @@ local open_gui=function(player)
             if name:find("^se%-core%-fragment") ~= nil then -- Hide SpaceExploration core fragments
                 goto skip_to_next;
             end
+            if name:find("^creative%-mod") ~= nil then -- Hide creative mod ores
+                goto skip_to_next;
+            end
             if settings.global["resourcehighlighter-highlight-all"].value then
                 for name,resource_rec in pairs(global.resource_recs) do
                     player_rec.choices[name]=true
