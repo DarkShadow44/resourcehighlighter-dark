@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.0
+  Changes:
+	- Hide creative mode ores
+	- Replace minimum resource setting with slider
+	- Remove rh_rescan command, use rh_reset instead
+---------------------------------------------------------------------------------------------------
 Version: 2.0.6
   Changes:
 	- Fix another crash with invalid surfaces
