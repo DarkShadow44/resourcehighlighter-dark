@@ -236,6 +236,17 @@ local directions={
     {x= 0,y=-1},
 }
 
+function amount_to_str(amount)
+    local amount_str = tostring(amount);
+
+    if (amount >= 1000000) then
+        amount_str = tostring(math.floor(amount / 100000) / 10).."M";
+    elseif (amount >= 1000) then
+        amount_str = tostring(math.floor(amount / 1000)).."k";
+    end
+    return amount_str
+end
+
 local search_chunk_res=function(params,markedStack)
 
     local currentCount=0
@@ -274,13 +285,7 @@ local search_chunk_res=function(params,markedStack)
         end
 
         local amount = originalAmount*currentCount/originalCount;
-        local amount_str = tostring(amount);
-
-        if (amount > 1000000) then
-            amount_str = tostring(math.floor(amount / 100000) / 10).."M";
-        elseif (amount > 1000) then
-            amount_str = tostring(math.floor(amount / 1000)).."k";
-        end
+        local amount_str = amount_to_str(amount);
 
         if game.item_prototypes["resourcehighlighter-treasure-"..params.name] == nil then
             return;
