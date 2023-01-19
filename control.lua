@@ -109,6 +109,7 @@ local get_player_rec=function(player_index)
             player_rec.choices[name]=false
         end
         player_rec.chart_tags={}
+        player_rec.min_resource = 10000
     end
     return global.player_recs[player_index]
 end
@@ -291,11 +292,12 @@ local search_chunk_res=function(params,markedStack)
             return;
         end
 
+        local player_rec=get_player_rec(params.player.index)
         -- This formula is a very rough approximation of how much ore is left in the ore patch.
         -- Since the goal is to make the ore patch disappear after it's mostly mined out, the approximation is good enough.
-        if originalAmount*currentCount/originalCount>=settings.global["resourcehighlighter-minimum-size"].value then
+        if originalAmount*currentCount/originalCount>=player_rec.min_resource then
             local cx,cy=centroid.x/currentCount,centroid.y/currentCount
-            local player_rec=get_player_rec(params.player.index)
+
             local chart_tag=params.player.force.add_chart_tag(params.surface,{
                 icon={type="item",name="resourcehighlighter-treasure-"..params.name},
                 position={x=cx, y=cy},
@@ -413,6 +415,10 @@ local open_gui=function(player)
             end
             ::skip_to_next::
         end
+        top.add({type="frame",name="frame_min_resource", caption={"min_resource_label"}})
+        top.frame_min_resource.add({type="slider",name="min_resource_slider", maximum_value="1000000",value_step="10000",value=player_rec.min_resource})
+        local resource_start = " "..amount_to_str(player_rec.min_resource)
+        top.frame_min_resource.add({type="label",name="min_resource_label",caption=resource_start})
         top.add({type="flow",name="button_bar",direction="horizontal"})
         local check_all=top.button_bar.add({type="button",name="resourcehighlighter_check_all",caption={"resourcehighlighter_check_all"}})
         check_all.style.horizontally_stretchable=true
@@ -456,6 +462,14 @@ script.on_event("resourcehighlighter-toggle", function(event)
     else
         open_gui(player)
     end
+end)
+
+script.on_event(defines.events.on_gui_value_changed, function(event)
+    local player=game.players[event.player_index]
+    local player_rec=get_player_rec(event.player_index)
+    player_rec.min_resource = event.element.slider_value
+    event.element.parent.min_resource_label.caption = " "..amount_to_str(player_rec.min_resource)
+    update_labels(player)
 end)
 
 script.on_event(defines.events.on_lua_shortcut, function(event)
