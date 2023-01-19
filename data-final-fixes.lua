@@ -1,11 +1,14 @@
+data:extend {
+    {
+        type = "custom-input",
+        name = "resourcehighlighter-toggle",
+        key_sequence = "SHIFT + H",
+        consuming = "none"
+    }
+}
+
 for k, v in pairs(data.raw.resource) do
-	data:extend{
-		{
-			type = "custom-input",
-			name = "resourcehighlighter-toggle",
-			key_sequence = "SHIFT + H",
-			consuming = "none"
-		},
+	data:extend {
 		{
 			type = "item",
 			name = "resourcehighlighter-treasure-"..v.name,
