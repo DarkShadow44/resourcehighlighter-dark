@@ -409,9 +409,11 @@ local open_gui=function(player)
             table.add({type="label",caption=resource_rec.caption})
 
             f=table.add({type="flow",direction="horizontal"})
-            for _,miner in ipairs(resource_rec.miners) do
-                local b=f.add({type="choose-elem-button",elem_type="item",item=miner.item})
-                b.locked=true
+            if settings.global["resourcehighlighter-show-miners"].value then
+                for _,miner in ipairs(resource_rec.miners) do
+                    local b=f.add({type="choose-elem-button",elem_type="item",item=miner.item})
+                    b.locked=true
+                end
             end
             ::skip_to_next::
         end

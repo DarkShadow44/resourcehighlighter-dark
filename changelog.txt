@@ -2,6 +2,7 @@
 Version: x
   Changes:
 	- Fix crash when using other mod sliders
+	- Add setting to show possibe minders, off by default
 ---------------------------------------------------------------------------------------------------
 Version: 2.1.0
   Changes:
