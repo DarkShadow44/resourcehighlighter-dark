@@ -5,6 +5,7 @@ Version: x
 	- Add setting to show possibe minders, off by default
 	- Only update labels 30 ticks after resource slider was last moved, to prevent slowdowns
 	- Rework min resource slider values
+	- Replace checkboxes with clickable buttons
 ---------------------------------------------------------------------------------------------------
 Version: 2.1.0
   Changes:

@@ -12,12 +12,13 @@ local initialize_resources=function()
             local resource_rec={}
             resource_rec.caption=entity.localised_name
             resource_rec.category=entity.resource_category
-            resource_rec.products_and_ingredients={}
+            resource_rec.products={}
+            resource_rec.ingredients={}
             for _,product in ipairs(products) do
-                table.insert(resource_rec.products_and_ingredients,{type=product.type,name=product.name})
+                table.insert(resource_rec.products,{type=product.type,name=entity.name})
             end
             if entity.mineable_properties.required_fluid then
-                table.insert(resource_rec.products_and_ingredients,{type="fluid",name=entity.mineable_properties.required_fluid})
+                table.insert(resource_rec.ingredients,{type="fluid",name=entity.mineable_properties.required_fluid})
             end
             global.resource_recs[name]=resource_rec
         end
@@ -347,14 +348,25 @@ local update_labels=function(player)
 
 end
 
+local get_button_style = function(checked)
+    if checked then
+        return "flib_selected_slot_button_default"
+     else
+        return "flib_slot_button_default"
+    end
+end
+
 local update_player_boxes=function(player)
     local top=player.gui.screen.resourcehighlighter_top
     if top then
         local table_children=top.scroller.table.children
         local player_rec=get_player_rec(player.index)
-        for _,child in pairs(table_children) do
-            if string.sub(child.name,1,26)=="resourcehighlighter_check_" then
-                child.state=player_rec.choices[string.sub(child.name,27)]
+        for _,pchild in pairs(table_children) do
+            for _,child in pairs(pchild.children) do
+                if child.name:find("^resourcehighlighter_toggle_")  then
+                    local state=player_rec.choices[string.sub(child.name,28)]
+                    child.style = get_button_style(state)
+                end
             end
         end
     end
@@ -389,7 +401,7 @@ local open_gui=function(player)
             name="resourcehighlighter_close"})
         top.add({type="scroll-pane",name="scroller"})
         top.scroller.style.vertically_stretchable=true
-        top.scroller.add({type="table",name="table",column_count=4})
+        top.scroller.add({type="table",name="table",column_count=3})
         local table=top.scroller.table
         for _,name in ipairs(get_player_resource_order(player_rec)) do
             if name:find("^se%-core%-fragment") ~= nil then -- Hide SpaceExploration core fragments
@@ -402,12 +414,13 @@ local open_gui=function(player)
                 player_rec.choices[name]=true
             end
             local resource_rec=global.resource_recs[name]
-            table.add({type="checkbox",name="resourcehighlighter_check_"..name,state=player_rec.choices[name]})
 
             local f=table.add({type="flow",direction="horizontal"})
-            for _,pi in ipairs(resource_rec.products_and_ingredients) do
-                local b=f.add({type="choose-elem-button",elem_type=pi.type,item=pi.name,fluid=pi.name})
-                b.locked=true
+            for _,pi in ipairs(resource_rec.products) do
+                local b=f.add({type="sprite-button",sprite="entity/"..pi.name,name="resourcehighlighter_toggle_"..name,style=get_button_style(player_rec.choices[name])})
+            end
+            for _,pi in ipairs(resource_rec.ingredients) do
+                local b=f.add({type="sprite-button",sprite="fluid/"..pi.name,style="flib_slot_button_default"})
             end
 
             table.add({type="label",caption=resource_rec.caption})
@@ -492,23 +505,19 @@ script.on_event(defines.events.on_lua_shortcut, function(event)
     end
 end)
 
-script.on_event(defines.events.on_gui_checked_state_changed, function(event)
-    local player=game.players[event.player_index]
-    local player_rec=get_player_rec(player.index)
-    if string.sub(event.element.name,1,26)=="resourcehighlighter_check_" then
-        player_rec.choices[string.sub(event.element.name,27)]=event.element.state
-    end
-    update_labels(player)
-end)
-
 script.on_event(defines.events.on_gui_click, function(event)
     local player=game.players[event.player_index]
+    local player_rec=get_player_rec(player.index)
     if event.element.name=="resourcehighlighter_close" then
         close_gui(player)
     elseif event.element.name=="resourcehighlighter_check_all" then
         set_all_check_boxes(player,true)
     elseif event.element.name=="resourcehighlighter_check_none" then
         set_all_check_boxes(player,false)
+    elseif event.element.name:find("^resourcehighlighter_toggle_")  then
+        local resource = string.sub(event.element.name,28)
+        player_rec.choices[resource]=not player_rec.choices[resource]
+        event.element.style = get_button_style(player_rec.choices[resource])
     end
 end)
 
