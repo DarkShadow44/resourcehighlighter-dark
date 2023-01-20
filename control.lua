@@ -16,6 +16,16 @@ local initialize_resources=function()
             resource_rec.ingredients={}
             for _,product in ipairs(products) do
                 table.insert(resource_rec.products,{type=product.type,name=entity.name})
+                if product.type == "item" then
+                    local protos = game.get_filtered_item_prototypes({{filter = "name", name = product.name}})
+                    proto = protos[product.name]
+                    resource_rec.caption2 = proto.localised_name
+                end
+                if product.type == "fluid" then
+                    local protos = game.get_filtered_fluid_prototypes({{filter = "name", name = product.name}})
+                    proto = protos[product.name]
+                    resource_rec.caption2 = proto.localised_name
+                end
             end
             if entity.mineable_properties.required_fluid then
                 table.insert(resource_rec.ingredients,{type="fluid",name=entity.mineable_properties.required_fluid})
@@ -140,6 +150,7 @@ local function init_player(player)
         player_rec.translations={}
         for name,resource_rec in pairs(global.resource_recs) do
             player.request_translation({"resourcehighlighter-request-translation",name,resource_rec.caption})
+            player.request_translation({"resourcehighlighter-request-translation",name,resource_rec.caption2})
         end
     end
 end
@@ -152,8 +163,9 @@ script.on_event(defines.events.on_string_translated, function(event)
     local player_rec=get_player_rec(event.player_index)
 
     if player_rec.translations and event.translated and event.localised_string[1]=="resourcehighlighter-request-translation" and
-        event.localised_string[2] then
+        event.localised_string[2] and event.localised_string[3] and event.localised_string[3][1] then
         player_rec.translations[event.localised_string[2]]=event.result
+        player_rec.translations[event.localised_string[3][1]]=event.result
         player_rec.resource_order=nil --Remake resource_order since the order has changed
     end
 end)
@@ -423,7 +435,16 @@ local open_gui=function(player)
                 local b=f.add({type="sprite-button",sprite="fluid/"..pi.name,style="flib_slot_button_default"})
             end
 
-            table.add({type="label",caption=resource_rec.caption})
+            local caption_id = resource_rec.caption[1]
+            local caption2_id = resource_rec.caption2[1]
+            local caption = player_rec.translations[caption_id] or resource_rec.caption
+            local caption2 = player_rec.translations[caption2_id] or resource_rec.caption2
+            if caption == caption2 then
+                combined_caption = caption
+            else
+                combined_caption = {"", caption, " (", caption2, ")"}
+            end
+            table.add({type="label",caption=combined_caption})
 
             f=table.add({type="flow",direction="horizontal"})
             if settings.global["resourcehighlighter-show-miners"].value then

@@ -6,6 +6,7 @@ Version: x
 	- Only update labels 30 ticks after resource slider was last moved, to prevent slowdowns
 	- Rework min resource slider values
 	- Replace checkboxes with clickable buttons
+	- Show resource item names when different from the resource name
 ---------------------------------------------------------------------------------------------------
 Version: 2.1.0
   Changes:
