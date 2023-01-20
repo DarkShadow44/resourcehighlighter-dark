@@ -552,7 +552,7 @@ script.on_event(defines.events.on_tick, function(event)
     global.scanned_resources=0
 
     for player_index,player_rec in pairs(global.player_recs) do
-        if event.tick > player_rec.last_update_requested_tick + 30  then -- Only update labels after user stopped dragging the slider for a few ticks
+        if player_rec.last_update_requested_tick > 0 and event.tick > player_rec.last_update_requested_tick + 30  then -- Only update labels after user stopped dragging the slider for a few ticks
             player_rec.last_update_requested_tick = 0
             local player=game.players[player_index]
             update_labels(player)
