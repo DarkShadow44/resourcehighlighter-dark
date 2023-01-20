@@ -1,52 +1,55 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.2.2
+  Changes:
+    - Fix massive UPS issue
+---------------------------------------------------------------------------------------------------
 Version: 2.2.1
   Changes:
-	- Fix crash when using other mod sliders
-	- Add setting to show possibe minders, off by default
-	- Only update labels 30 ticks after resource slider was last moved, to prevent slowdowns
-	- Rework min resource slider values
-	- Replace checkboxes with clickable buttons
-	- Show resource item names when different from the resource name
+    - Fix crash when using other mod sliders
+    - Add setting to show possibe minders, off by default
+    - Only update labels 30 ticks after resource slider was last moved, to prevent slowdowns
+    - Rework min resource slider values
+    - Replace checkboxes with clickable buttons
+    - Show resource item names when different from the resource name
 ---------------------------------------------------------------------------------------------------
 Version: 2.1.0
   Changes:
-	- Hide creative mode ores
-	- Replace minimum resource setting with slider
-	- Remove rh_rescan command, use rh_reset instead
+    - Hide creative mode ores
+    - Replace minimum resource setting with slider
+    - Remove rh_rescan command, use rh_reset instead
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.6
   Changes:
-	- Fix another crash with invalid surfaces
-	- Fix crash when surface is null
-	- Add setting to select all by default
-	- Remove refresh button
-	- Add french locale
+    - Fix another crash with invalid surfaces
+    - Fix crash when surface is null
+    - Add setting to select all by default
+    - Remove refresh button
+    - Add french locale
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.5
   Changes:
-	- Fix crash with invalid surfaces
-	- Add resource scan progress messages (every 15s)
-	- Speed up scan speed 4x (might cause a bit more lag, but is quicker)
+    - Fix crash with invalid surfaces
+    - Add resource scan progress messages (every 15s)
+    - Speed up scan speed 4x (might cause a bit more lag, but is quicker)
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.4
   Changes:
-	- Fix crash when removing mods
+    - Fix crash when removing mods
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.3
   Changes:
-	- Work with resources from nullius
+    - Work with resources from nullius
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.2
   Changes:
-	- Fix crash with SpaceExploration
-	- Hide SpaceExploration core fragments from GUI
+    - Fix crash with SpaceExploration
+    - Hide SpaceExploration core fragments from GUI
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.1
   Changes:
-	- Fix crash due to name change
+    - Fix crash due to name change
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.0
   Changes:
-	- Update to Factorio 1.1
-	- Show more information in labels
----------------------------------------------------------------------------------------------------
+    - Update to Factorio 1.1
+    - Show more information in labels
