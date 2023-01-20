@@ -110,6 +110,7 @@ local get_player_rec=function(player_index)
         end
         player_rec.chart_tags={}
         player_rec.min_resource = 10000
+        player_rec.last_update_requested_tick = 0
     end
     return global.player_recs[player_index]
 end
@@ -442,6 +443,7 @@ local close_gui=function(player)
     local screen=player.gui.screen
     if screen.resourcehighlighter_top then
         local player_rec=get_player_rec(player.index)
+        player_rec.last_update_requested_tick = 0
         player_rec.frame_location=screen.resourcehighlighter_top.location
         screen.resourcehighlighter_top.destroy()
 
@@ -472,7 +474,7 @@ script.on_event(defines.events.on_gui_value_changed, function(event)
         local player_rec=get_player_rec(event.player_index)
         player_rec.min_resource = event.element.slider_value
         event.element.parent.min_resource_label.caption = " "..amount_to_str(player_rec.min_resource)
-        update_labels(player)
+        player_rec.last_update_requested_tick = event.tick
     end
 end)
 
@@ -515,6 +517,14 @@ script.on_event(defines.events.on_tick, function(event)
     end
     global.scanned_chunks=0
     global.scanned_resources=0
+
+    for player_index,player_rec in pairs(global.player_recs) do
+        if event.tick > player_rec.last_update_requested_tick + 30  then -- Only update labels after user stopped dragging the slider for a few ticks
+            player_rec.last_update_requested_tick = 0
+            local player=game.players[player_index]
+            update_labels(player)
+        end
+    end
 
     if global.chunks_to_scan_max > 0 then
         if global.chunks_to_scan_time == nil then
