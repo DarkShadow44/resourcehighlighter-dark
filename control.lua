@@ -416,7 +416,7 @@ local open_gui=function(player)
             ::skip_to_next::
         end
         top.add({type="frame",name="frame_min_resource", caption={"min_resource_label"}})
-        top.frame_min_resource.add({type="slider",name="min_resource_slider", maximum_value="1000000",value_step="10000",value=player_rec.min_resource})
+        top.frame_min_resource.add({type="slider",name="resourcehighlighter_min_resource_slider", maximum_value="1000000",value_step="10000",value=player_rec.min_resource})
         local resource_start = " "..amount_to_str(player_rec.min_resource)
         top.frame_min_resource.add({type="label",name="min_resource_label",caption=resource_start})
         top.add({type="flow",name="button_bar",direction="horizontal"})
@@ -465,11 +465,13 @@ script.on_event("resourcehighlighter-toggle", function(event)
 end)
 
 script.on_event(defines.events.on_gui_value_changed, function(event)
-    local player=game.players[event.player_index]
-    local player_rec=get_player_rec(event.player_index)
-    player_rec.min_resource = event.element.slider_value
-    event.element.parent.min_resource_label.caption = " "..amount_to_str(player_rec.min_resource)
-    update_labels(player)
+    if event.element.name == "resourcehighlighter_min_resource_slider" then
+        local player=game.players[event.player_index]
+        local player_rec=get_player_rec(event.player_index)
+        player_rec.min_resource = event.element.slider_value
+        event.element.parent.min_resource_label.caption = " "..amount_to_str(player_rec.min_resource)
+        update_labels(player)
+    end
 end)
 
 script.on_event(defines.events.on_lua_shortcut, function(event)
