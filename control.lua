@@ -1,4 +1,4 @@
-require("./resource_map.lua")
+require("resource_map")
 local min_resource_map = resource_highlighter_get_min_resource_map()
 
 local initialize_resources=function()
