@@ -1,3 +1,6 @@
+require("./resource_map.lua")
+local min_resource_map = resource_highlighter_get_min_resource_map()
+
 local initialize_resources=function()
     global.resource_recs={}
     local miner_map={}
@@ -109,7 +112,7 @@ local get_player_rec=function(player_index)
             player_rec.choices[name]=false
         end
         player_rec.chart_tags={}
-        player_rec.min_resource = 10000
+        player_rec.min_resource_selection = 2 -- 10k
         player_rec.last_update_requested_tick = 0
     end
     return global.player_recs[player_index]
@@ -296,7 +299,7 @@ local search_chunk_res=function(params,markedStack)
         local player_rec=get_player_rec(params.player.index)
         -- This formula is a very rough approximation of how much ore is left in the ore patch.
         -- Since the goal is to make the ore patch disappear after it's mostly mined out, the approximation is good enough.
-        if originalAmount*currentCount/originalCount>=player_rec.min_resource then
+        if originalAmount*currentCount/originalCount>=min_resource_map[player_rec.min_resource_selection] then
             local cx,cy=centroid.x/currentCount,centroid.y/currentCount
 
             local chart_tag=params.player.force.add_chart_tag(params.surface,{
@@ -419,12 +422,12 @@ local open_gui=function(player)
             ::skip_to_next::
         end
         top.add({type="frame",name="frame_min_resource", caption={"min_resource_label"}})
-        top.frame_min_resource.add({type="slider",name="resourcehighlighter_min_resource_slider", maximum_value="1000000",value_step="10000",value=player_rec.min_resource})
-        local resource_start = " "..amount_to_str(player_rec.min_resource)
+        top.frame_min_resource.add({type="slider",name="resourcehighlighter_min_resource_slider", minimum_value=1,maximum_value=#min_resource_map,value_step=1,value=player_rec.min_resource_selection})
+        local resource_start = " "..amount_to_str(min_resource_map[player_rec.min_resource_selection])
         top.frame_min_resource.add({type="label",name="min_resource_label",caption=resource_start})
         top.add({type="flow",name="button_bar",direction="horizontal"})
         local check_all=top.button_bar.add({type="button",name="resourcehighlighter_check_all",caption={"resourcehighlighter_check_all"}})
-        check_all.style.horizontally_stretchable=true
+        check_all.style.horizontally_stretchable=trueF
         check_all.style.minimal_width=72
         local check_none=top.button_bar.add({type="button",name="resourcehighlighter_check_none",caption={"resourcehighlighter_check_none"}})
         check_none.style.horizontally_stretchable=true
@@ -472,8 +475,8 @@ script.on_event(defines.events.on_gui_value_changed, function(event)
     if event.element.name == "resourcehighlighter_min_resource_slider" then
         local player=game.players[event.player_index]
         local player_rec=get_player_rec(event.player_index)
-        player_rec.min_resource = event.element.slider_value
-        event.element.parent.min_resource_label.caption = " "..amount_to_str(player_rec.min_resource)
+        player_rec.min_resource_selection = event.element.slider_value
+        event.element.parent.min_resource_label.caption = " "..amount_to_str(min_resource_map[player_rec.min_resource_selection])
         player_rec.last_update_requested_tick = event.tick
     end
 end)
