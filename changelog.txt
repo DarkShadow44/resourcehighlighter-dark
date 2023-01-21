@@ -14,7 +14,7 @@ Version: 2.3.0
 Version: 2.2.3
   Changes:
     - Space exploration compat: Hide resources not available on the current surface
-    - Properly update then toggling resource button
+    - Properly update when toggling resource button
     - Hide hidden ores when clicking "All" button
 ---------------------------------------------------------------------------------------------------
 Version: 2.2.2
