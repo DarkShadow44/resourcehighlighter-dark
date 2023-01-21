@@ -384,10 +384,22 @@ local update_player_boxes=function(player)
     end
 end
 
+local hide_ore = function(name)
+    if name:find("^se%-core%-fragment") ~= nil then -- Hide SpaceExploration core fragments
+        return true
+    end
+    if name:find("^creative%-mod") ~= nil then -- Hide creative mod ores
+        return true
+    end
+    return false
+end
+
 local set_all_check_boxes=function(player,state)
     local player_rec=get_player_rec(player.index)
     for name,resource_rec in pairs(global.resource_recs) do
-        player_rec.choices[name]=state
+        if not hide_ore(name) then
+            player_rec.choices[name]=state
+        end
     end
     update_player_boxes(player)
     update_labels(player)
@@ -421,10 +433,7 @@ local open_gui=function(player)
             se_ores = zone.controls
         end
         for _,name in ipairs(get_player_resource_order(player_rec)) do
-            if name:find("^se%-core%-fragment") ~= nil then -- Hide SpaceExploration core fragments
-                goto skip_to_next;
-            end
-            if name:find("^creative%-mod") ~= nil then -- Hide creative mod ores
+            if hide_ore(name) then
                 goto skip_to_next;
             end
             if script.active_mods["space-exploration"] then -- Don't show ores not on the current space exploration surface
