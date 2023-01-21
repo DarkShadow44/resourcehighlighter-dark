@@ -415,12 +415,22 @@ local open_gui=function(player)
         top.scroller.style.vertically_stretchable=true
         top.scroller.add({type="table",name="table",column_count=3})
         local table=top.scroller.table
+        local se_ores = {}
+        if script.active_mods["space-exploration"] then
+            local zone = remote.call("space-exploration", "get_zone_from_surface_index", {surface_index = player.surface.index})
+            se_ores = zone.controls
+        end
         for _,name in ipairs(get_player_resource_order(player_rec)) do
             if name:find("^se%-core%-fragment") ~= nil then -- Hide SpaceExploration core fragments
                 goto skip_to_next;
             end
             if name:find("^creative%-mod") ~= nil then -- Hide creative mod ores
                 goto skip_to_next;
+            end
+            if script.active_mods["space-exploration"] then -- Don't show ores not on the current space exploration surface
+                if se_ores[name] ~= nil and se_ores[name].frequency == 0 then
+                    goto skip_to_next;
+                end
             end
             if settings.global["resourcehighlighter-highlight-all"].value then
                 player_rec.choices[name]=true

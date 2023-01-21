@@ -1,4 +1,8 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.2.3
+  Changes:
+    - Space exploration compat: Hide resources not available on the current surface
+---------------------------------------------------------------------------------------------------
 Version: 2.2.2
   Changes:
     - Fix massive UPS issue

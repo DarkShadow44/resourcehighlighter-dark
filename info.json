@@ -6,5 +6,5 @@
 	"title":"Resource Highlighter (Dark's Version)",
 	"homepage":"",
 	"description":"A tool for highlighting resources in chunks that you've already charted.",
-	"dependencies": ["base >= 0.18.0", "flib"]
+	"dependencies": ["base >= 0.18.0", "flib", "? space-exploration"]
 }
