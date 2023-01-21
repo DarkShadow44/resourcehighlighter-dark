@@ -4,6 +4,7 @@ Version: x
     - Don't crash if opening UI on spaceship
     - Update UI when changing surface
     - Rework UI style
+    - Add search function
 ---------------------------------------------------------------------------------------------------
 Version: 2.2.3
   Changes:

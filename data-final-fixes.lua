@@ -4,7 +4,13 @@ data:extend {
         name = "resourcehighlighter-toggle",
         key_sequence = "SHIFT + H",
         consuming = "none"
-    }
+    },
+    {
+        type = "custom-input",
+        name = "resourcehighlighter-focus-search",
+        key_sequence = "",
+        linked_game_control = "focus-search",
+    },
 }
 
 data:extend {

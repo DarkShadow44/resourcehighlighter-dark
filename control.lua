@@ -125,6 +125,7 @@ local get_player_rec=function(player_index)
         player_rec.chart_tags={}
         player_rec.min_resource_selection = 2 -- 10k
         player_rec.last_update_requested_tick = 0
+        player_rec.search_text = ""
     end
     return global.player_recs[player_index]
 end
@@ -405,26 +406,34 @@ local set_all_check_boxes=function(player,state)
     update_labels(player)
 end
 
-local open_gui=function(player)
+local open_gui=function(player,update_search)
     local screen=player.gui.screen
-    if not screen.resourcehighlighter_top then
+    update_search = update_search or false
+    if not screen.resourcehighlighter_top or update_search then
+        local need_recreate = not screen.resourcehighlighter_top
         local player_rec=get_player_rec(player.index)
-
+        local top=screen.resourcehighlighter_top
+        local height=500
+        if need_recreate then
             screen.add({type="frame",name="resourcehighlighter_top",direction="vertical"})
-            local top=screen.resourcehighlighter_top
-            local height=500
+            top=screen.resourcehighlighter_top
             top.style.height=height
             top.add({type="flow",name="title_bar",direction="horizontal"})
             top.title_bar.add({type="label",name="resourcehighlighter_title",caption={"resourcehighlighter_title"},style="frame_title"})
             top.title_bar.add({type="empty-widget",name="dragger",style="flib_titlebar_drag_handle"})
             top.title_bar.dragger.drag_target=screen.resourcehighlighter_top
             top.title_bar.add({type="textfield",visible=false,name="resourcehighlighter_search_text"})
+            top.title_bar.resourcehighlighter_search_text.style.width=95
+            top.title_bar.resourcehighlighter_search_text.style.top_margin=-3
             top.title_bar.add({type="sprite-button",sprite="utility/search_white",name="resourcehighlighter_search_button",style="frame_action_button"})
             top.title_bar.add({type="sprite-button",sprite="utility/close_white",hovered_sprite="utility/close_black",name="resourcehighlighter_close",style="frame_action_button"})
             top.add({type="scroll-pane",name="scroller"})
             top.scroller.style.vertically_stretchable=true
+            top.scroller.style.horizontally_stretchable=true
             top.scroller.add({type="table",name="table",column_count=3})
+        end
         local table=top.scroller.table
+        table.clear()
         local se_ores = nil
         if script.active_mods["space-exploration"] then
             local zone = remote.call("space-exploration", "get_zone_from_surface_index", {surface_index = player.surface.index})
@@ -454,6 +463,12 @@ local open_gui=function(player)
             else
                 combined_caption = {"", caption, " (", caption2, ")"}
             end
+            if top.title_bar.resourcehighlighter_search_text.visible and player_rec.search_text ~= nil and player_rec.search_text ~= "" and player_rec.translations[caption_id] and player_rec.translations[caption2_id] then
+                if not caption:lower():find(player_rec.search_text:lower()) and not caption2:lower():find(player_rec.search_text:lower()) then
+                    goto skip_to_next
+                end
+            end
+
             if settings.global["resourcehighlighter-highlight-all"].value then
                 player_rec.choices[name]=true
             end
@@ -477,6 +492,7 @@ local open_gui=function(player)
             end
             ::skip_to_next::
         end
+        if need_recreate then
             top.add({type="frame",name="frame_min_resource"})
             top.frame_min_resource.add({type="label",caption={"min_resource_label"}})
             top.frame_min_resource.add({type="empty-widget",ignored_by_interaction=true})
@@ -497,7 +513,7 @@ local open_gui=function(player)
             else
                 top.location={x=0, y=(player.display_resolution.height-height)/2}
             end
-
+        end
         update_labels(player)
     end
 end
@@ -513,6 +529,7 @@ local close_gui=function(player)
         for name,resource_rec in pairs(global.resource_recs) do
             player_rec.choices[name]=false
         end
+        player_rec.search_text = ""
         destroy_labels(player)
     end
 end
@@ -528,6 +545,27 @@ script.on_event("resourcehighlighter-toggle", function(event)
         close_gui(player)
     else
         open_gui(player)
+    end
+end)
+
+local function toggle_search(player)
+    local top=player.gui.screen.resourcehighlighter_top
+    local textfield = top.title_bar.resourcehighlighter_search_text
+    textfield.visible = not textfield.visible
+    if textfield.visible then
+        textfield.focus()
+    else
+        local player_rec=get_player_rec(player.index)
+        player_rec.search_text = ""
+        textfield.text=""
+    end
+    open_gui(player,true) -- apply or remove filter when textbox got shown or hidden
+end
+
+script.on_event("resourcehighlighter-focus-search", function(event)
+    local player=game.players[event.player_index]
+    if is_gui_open(player) then
+        toggle_search(player)
     end
 end)
 
@@ -562,13 +600,21 @@ script.on_event(defines.events.on_gui_click, function(event)
     elseif event.element.name=="resourcehighlighter_check_none" then
         set_all_check_boxes(player,false)
     elseif event.element.name=="resourcehighlighter_search_button" then
-        local textfield = event.element.parent["resourcehighlighter_search_text"]
-        textfield.visible = not textfield.visible
+        toggle_search(player)
     elseif event.element.name:find("^resourcehighlighter_toggle_")  then
         local resource = string.sub(event.element.name,28)
         player_rec.choices[resource]=not player_rec.choices[resource]
         event.element.style = get_button_style(player_rec.choices[resource])
         update_labels(player)
+    end
+end)
+
+script.on_event(defines.events.on_gui_text_changed, function(event)
+    local player=game.players[event.player_index]
+    local player_rec=get_player_rec(player.index)
+    if event.element.name == "resourcehighlighter_search_text" then
+        player_rec.search_text = event.text
+        open_gui(player,true)
     end
 end)
 
