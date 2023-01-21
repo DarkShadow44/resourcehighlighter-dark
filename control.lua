@@ -549,6 +549,7 @@ script.on_event(defines.events.on_gui_click, function(event)
         local resource = string.sub(event.element.name,28)
         player_rec.choices[resource]=not player_rec.choices[resource]
         event.element.style = get_button_style(player_rec.choices[resource])
+        update_labels(player)
     end
 end)
 
