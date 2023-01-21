@@ -434,29 +434,17 @@ local open_gui=function(player)
         end
         for _,name in ipairs(get_player_resource_order(player_rec)) do
             if hide_ore(name) then
-                goto skip_to_next;
+                goto skip_to_next
             end
             if script.active_mods["space-exploration"] then -- Don't show ores not on the current space exploration surface
                 if se_ores == nil then
-                    goto skip_to_next;
+                    goto skip_to_next
                 end
                 if se_ores[name] ~= nil and se_ores[name].frequency == 0 then
-                    goto skip_to_next;
+                    goto skip_to_next
                 end
             end
-            if settings.global["resourcehighlighter-highlight-all"].value then
-                player_rec.choices[name]=true
-            end
             local resource_rec=global.resource_recs[name]
-
-            local f=table.add({type="flow",direction="horizontal"})
-            for _,pi in ipairs(resource_rec.products) do
-                local b=f.add({type="sprite-button",sprite="entity/"..pi.name,name="resourcehighlighter_toggle_"..name,style=get_button_style(player_rec.choices[name])})
-            end
-            for _,pi in ipairs(resource_rec.ingredients) do
-                local b=f.add({type="sprite-button",sprite="fluid/"..pi.name,style="flib_slot_button_default"})
-            end
-
             local caption_id = resource_rec.caption[1]
             local caption2_id = resource_rec.caption2[1]
             local caption = player_rec.translations[caption_id] or resource_rec.caption
@@ -466,6 +454,18 @@ local open_gui=function(player)
             else
                 combined_caption = {"", caption, " (", caption2, ")"}
             end
+            if settings.global["resourcehighlighter-highlight-all"].value then
+                player_rec.choices[name]=true
+            end
+
+            local f=table.add({type="flow",direction="horizontal"})
+            for _,pi in ipairs(resource_rec.products) do
+                local b=f.add({type="sprite-button",sprite="entity/"..pi.name,name="resourcehighlighter_toggle_"..name,style=get_button_style(player_rec.choices[name])})
+            end
+            for _,pi in ipairs(resource_rec.ingredients) do
+                local b=f.add({type="sprite-button",sprite="fluid/"..pi.name,style="flib_slot_button_default"})
+            end
+
             table.add({type="label",caption=combined_caption})
 
             f=table.add({type="flow",direction="horizontal"})
