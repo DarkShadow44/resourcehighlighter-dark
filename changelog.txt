@@ -2,6 +2,7 @@
 Version: x
   Changes:
     - Don't crash if opening UI on spaceship
+    - Update UI when changing surface
 ---------------------------------------------------------------------------------------------------
 Version: 2.2.3
   Changes:

@@ -601,6 +601,14 @@ script.on_event(defines.events.on_tick, function(event)
     end
 end)
 
+script.on_event(defines.events.on_player_changed_surface, function(event)
+    local player=game.players[event.player_index]
+    if is_gui_open(player) then
+        close_gui(player)
+        open_gui(player)
+    end
+end)
+
 script.on_event(defines.events.on_player_changed_force, function(event)
     -- 1. The player's chart tags need to update (because the set of charted chunks changed)
     -- 2. The player's chart tags need to transfer to the new force
