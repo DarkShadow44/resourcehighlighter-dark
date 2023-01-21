@@ -410,20 +410,20 @@ local open_gui=function(player)
     if not screen.resourcehighlighter_top then
         local player_rec=get_player_rec(player.index)
 
-        screen.add({type="frame",name="resourcehighlighter_top",direction="vertical"})
-        local top=screen.resourcehighlighter_top
-        local height=500
-        top.style.height=height
-        top.add({type="flow",name="title_bar",direction="horizontal"})
-        top.title_bar.add({type="label",name="resourcehighlighter_title",caption={"resourcehighlighter_title"},style="frame_title"})
-        top.title_bar.add({type="empty-widget",name="dragger",style="flib_titlebar_drag_handle"})
-        top.title_bar.dragger.drag_target=screen.resourcehighlighter_top
-        top.title_bar.add({type="textfield",visible=false,name="resourcehighlighter_search_text"})
-        top.title_bar.add({type="sprite-button",sprite="utility/search_white",name="resourcehighlighter_search_button",style="frame_action_button"})
-        top.title_bar.add({type="sprite-button",sprite="utility/close_white",hovered_sprite="utility/close_black",name="resourcehighlighter_close",style="frame_action_button"})
-        top.add({type="scroll-pane",name="scroller"})
-        top.scroller.style.vertically_stretchable=true
-        top.scroller.add({type="table",name="table",column_count=3})
+            screen.add({type="frame",name="resourcehighlighter_top",direction="vertical"})
+            local top=screen.resourcehighlighter_top
+            local height=500
+            top.style.height=height
+            top.add({type="flow",name="title_bar",direction="horizontal"})
+            top.title_bar.add({type="label",name="resourcehighlighter_title",caption={"resourcehighlighter_title"},style="frame_title"})
+            top.title_bar.add({type="empty-widget",name="dragger",style="flib_titlebar_drag_handle"})
+            top.title_bar.dragger.drag_target=screen.resourcehighlighter_top
+            top.title_bar.add({type="textfield",visible=false,name="resourcehighlighter_search_text"})
+            top.title_bar.add({type="sprite-button",sprite="utility/search_white",name="resourcehighlighter_search_button",style="frame_action_button"})
+            top.title_bar.add({type="sprite-button",sprite="utility/close_white",hovered_sprite="utility/close_black",name="resourcehighlighter_close",style="frame_action_button"})
+            top.add({type="scroll-pane",name="scroller"})
+            top.scroller.style.vertically_stretchable=true
+            top.scroller.add({type="table",name="table",column_count=3})
         local table=top.scroller.table
         local se_ores = nil
         if script.active_mods["space-exploration"] then
@@ -477,26 +477,26 @@ local open_gui=function(player)
             end
             ::skip_to_next::
         end
-        top.add({type="frame",name="frame_min_resource"})
-        top.frame_min_resource.add({type="label",caption={"min_resource_label"}})
-        top.frame_min_resource.add({type="empty-widget",ignored_by_interaction=true})
-        top.frame_min_resource.add({type="slider",name="resourcehighlighter_min_resource_slider", minimum_value=1,maximum_value=#min_resource_map,value_step=1,value=player_rec.min_resource_selection})
-        top.frame_min_resource.resourcehighlighter_min_resource_slider.style.top_margin=6
-        local resource_start = " "..amount_to_str(min_resource_map[player_rec.min_resource_selection])
-        top.frame_min_resource.add({type="label",name="min_resource_label",caption=resource_start})
-        top.frame_min_resource.min_resource_label.style.width=40
-        top.add({type="flow",name="button_bar",direction="horizontal"})
-        local check_all=top.button_bar.add({type="button",name="resourcehighlighter_check_all",caption={"resourcehighlighter_check_all"}})
-        check_all.style.horizontally_stretchable=trueF
-        check_all.style.minimal_width=72
-        local check_none=top.button_bar.add({type="button",name="resourcehighlighter_check_none",caption={"resourcehighlighter_check_none"}})
-        check_none.style.horizontally_stretchable=true
-        check_none.style.minimal_width=72
-        if player_rec.frame_location then
-            top.location=player_rec.frame_location
-        else
-            top.location={x=0, y=(player.display_resolution.height-height)/2}
-        end
+            top.add({type="frame",name="frame_min_resource"})
+            top.frame_min_resource.add({type="label",caption={"min_resource_label"}})
+            top.frame_min_resource.add({type="empty-widget",ignored_by_interaction=true})
+            top.frame_min_resource.add({type="slider",name="resourcehighlighter_min_resource_slider", minimum_value=1,maximum_value=#min_resource_map,value_step=1,value=player_rec.min_resource_selection})
+            top.frame_min_resource.resourcehighlighter_min_resource_slider.style.top_margin=6
+            local resource_start = " "..amount_to_str(min_resource_map[player_rec.min_resource_selection])
+            top.frame_min_resource.add({type="label",name="min_resource_label",caption=resource_start})
+            top.frame_min_resource.min_resource_label.style.width=40
+            top.add({type="flow",name="button_bar",direction="horizontal"})
+            local check_all=top.button_bar.add({type="button",name="resourcehighlighter_check_all",caption={"resourcehighlighter_check_all"}})
+            check_all.style.horizontally_stretchable=trueF
+            check_all.style.minimal_width=72
+            local check_none=top.button_bar.add({type="button",name="resourcehighlighter_check_none",caption={"resourcehighlighter_check_none"}})
+            check_none.style.horizontally_stretchable=true
+            check_none.style.minimal_width=72
+            if player_rec.frame_location then
+                top.location=player_rec.frame_location
+            else
+                top.location={x=0, y=(player.display_resolution.height-height)/2}
+            end
 
         update_labels(player)
     end
