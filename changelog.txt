@@ -1,4 +1,8 @@
 ---------------------------------------------------------------------------------------------------
+Version: x
+  Changes:
+    - Don't crash if opening UI on spaceship
+---------------------------------------------------------------------------------------------------
 Version: 2.2.3
   Changes:
     - Space exploration compat: Hide resources not available on the current surface

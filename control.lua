@@ -427,16 +427,21 @@ local open_gui=function(player)
         top.scroller.style.vertically_stretchable=true
         top.scroller.add({type="table",name="table",column_count=3})
         local table=top.scroller.table
-        local se_ores = {}
+        local se_ores = nil
         if script.active_mods["space-exploration"] then
             local zone = remote.call("space-exploration", "get_zone_from_surface_index", {surface_index = player.surface.index})
-            se_ores = zone.controls
+            if zone ~= nil then
+                se_ores = zone.controls
+            end
         end
         for _,name in ipairs(get_player_resource_order(player_rec)) do
             if hide_ore(name) then
                 goto skip_to_next;
             end
             if script.active_mods["space-exploration"] then -- Don't show ores not on the current space exploration surface
+                if se_ores == nil then
+                    goto skip_to_next;
+                end
                 if se_ores[name] ~= nil and se_ores[name].frequency == 0 then
                     goto skip_to_next;
                 end
