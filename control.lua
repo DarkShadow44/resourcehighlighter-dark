@@ -415,14 +415,12 @@ local open_gui=function(player)
         local height=500
         top.style.height=height
         top.add({type="flow",name="title_bar",direction="horizontal"})
-        top.title_bar.add({type="frame",name="title_frame",direction="horizontal",caption={"resourcehighlighter_title"}})
-        top.title_bar.title_frame.style.use_header_filler=true
-        top.title_bar.title_frame.drag_target=top
-        top.title_bar.title_frame.style.height=36
-        top.title_bar.title_frame.style.top_padding=0
-        top.title_bar.title_frame.style.bottom_padding=0
-        top.title_bar.add({type="sprite-button",sprite="utility/close_white",hovered_sprite="utility/close_black",
-            name="resourcehighlighter_close"})
+        top.title_bar.add({type="label",name="resourcehighlighter_title",caption={"resourcehighlighter_title"},style="frame_title"})
+        top.title_bar.add({type="empty-widget",name="dragger",style="flib_titlebar_drag_handle"})
+        top.title_bar.dragger.drag_target=screen.resourcehighlighter_top
+        top.title_bar.add({type="textfield",visible=false,name="resourcehighlighter_search_text"})
+        top.title_bar.add({type="sprite-button",sprite="utility/search_white",name="resourcehighlighter_search_button",style="frame_action_button"})
+        top.title_bar.add({type="sprite-button",sprite="utility/close_white",hovered_sprite="utility/close_black",name="resourcehighlighter_close",style="frame_action_button"})
         top.add({type="scroll-pane",name="scroller"})
         top.scroller.style.vertically_stretchable=true
         top.scroller.add({type="table",name="table",column_count=3})
@@ -479,10 +477,14 @@ local open_gui=function(player)
             end
             ::skip_to_next::
         end
-        top.add({type="frame",name="frame_min_resource", caption={"min_resource_label"}})
+        top.add({type="frame",name="frame_min_resource"})
+        top.frame_min_resource.add({type="label",caption={"min_resource_label"}})
+        top.frame_min_resource.add({type="empty-widget",ignored_by_interaction=true})
         top.frame_min_resource.add({type="slider",name="resourcehighlighter_min_resource_slider", minimum_value=1,maximum_value=#min_resource_map,value_step=1,value=player_rec.min_resource_selection})
+        top.frame_min_resource.resourcehighlighter_min_resource_slider.style.top_margin=6
         local resource_start = " "..amount_to_str(min_resource_map[player_rec.min_resource_selection])
         top.frame_min_resource.add({type="label",name="min_resource_label",caption=resource_start})
+        top.frame_min_resource.min_resource_label.style.width=40
         top.add({type="flow",name="button_bar",direction="horizontal"})
         local check_all=top.button_bar.add({type="button",name="resourcehighlighter_check_all",caption={"resourcehighlighter_check_all"}})
         check_all.style.horizontally_stretchable=trueF
@@ -559,6 +561,9 @@ script.on_event(defines.events.on_gui_click, function(event)
         set_all_check_boxes(player,true)
     elseif event.element.name=="resourcehighlighter_check_none" then
         set_all_check_boxes(player,false)
+    elseif event.element.name=="resourcehighlighter_search_button" then
+        local textfield = event.element.parent["resourcehighlighter_search_text"]
+        textfield.visible = not textfield.visible
     elseif event.element.name:find("^resourcehighlighter_toggle_")  then
         local resource = string.sub(event.element.name,28)
         player_rec.choices[resource]=not player_rec.choices[resource]
