@@ -15,7 +15,7 @@ local initialize_resources=function()
             resource_rec.products={}
             resource_rec.ingredients={}
             for _,product in ipairs(products) do
-                table.insert(resource_rec.products,{type=product.type,name=entity.name})
+                table.insert(resource_rec.products,{type=product.type,entity_name=entity.name,product_name=product.name})
                 if product.type == "item" then
                     local protos = game.get_filtered_item_prototypes({{filter = "name", name = product.name}})
                     proto = protos[product.name]
@@ -474,11 +474,16 @@ local open_gui=function(player,update_search)
             end
 
             local f=table.add({type="flow",direction="horizontal"})
-            for _,pi in ipairs(resource_rec.products) do
-                local b=f.add({type="sprite-button",sprite="entity/"..pi.name,name="resourcehighlighter_toggle_"..name,style=get_button_style(player_rec.choices[name])})
+            for pos,pi in ipairs(resource_rec.products) do
+                if pos == 1 then
+                    f.add({type="sprite-button",sprite="entity/"..pi.entity_name,name="resourcehighlighter_toggle_"..name,style=get_button_style(player_rec.choices[name])}) -- Clickable button
+                end
+                local b=f.add({type="choose-elem-button",elem_type=pi.type,item=pi.product_name,fluid=pi.product_name,style="flib_slot_button_green"})
+                b.locked=true
             end
             for _,pi in ipairs(resource_rec.ingredients) do
-                local b=f.add({type="sprite-button",sprite="fluid/"..pi.name,style="flib_slot_button_default"})
+                local b=f.add({type="choose-elem-button",elem_type=pi.type,item=pi.name,fluid=pi.name,style="flib_slot_button_orange"})
+                b.locked=true
             end
 
             table.add({type="label",caption=combined_caption})

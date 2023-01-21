@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.4.0
+  Changes:
+    - Fix crash with pymods
+    - Reworked UI to show the resource, then all results, then all needed fluids (if any)
+---------------------------------------------------------------------------------------------------
 Version: 2.3.0
   Changes:
     - Don't crash if opening UI on spaceship
