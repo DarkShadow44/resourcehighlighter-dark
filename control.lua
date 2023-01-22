@@ -478,8 +478,10 @@ local open_gui=function(player,update_search)
                 if pos == 1 then
                     f.add({type="sprite-button",sprite="entity/"..pi.entity_name,name="resourcehighlighter_toggle_"..name,style=get_button_style(player_rec.choices[name])}) -- Clickable button
                 end
-                local b=f.add({type="choose-elem-button",elem_type=pi.type,item=pi.product_name,fluid=pi.product_name,style="flib_slot_button_green"})
-                b.locked=true
+                if settings.global["resourcehighlighter-show-resource-results"].value then
+                    local b=f.add({type="choose-elem-button",elem_type=pi.type,item=pi.product_name,fluid=pi.product_name,style="flib_slot_button_green"})
+                    b.locked=true
+                end
             end
             for _,pi in ipairs(resource_rec.ingredients) do
                 local b=f.add({type="choose-elem-button",elem_type=pi.type,item=pi.name,fluid=pi.name,style="flib_slot_button_orange"})
