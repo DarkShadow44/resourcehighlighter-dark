@@ -455,7 +455,7 @@ local open_gui=function(player,update_search)
             end
             local resource_rec=global.resource_recs[name]
             local caption_id = resource_rec.caption[1]
-            if resource_rec.caption[2] ~=nil then
+            if resource_rec.caption[2] ~= nil and resource_rec.caption[2][1] ~= nil then
                 caption_id = caption_id.."-"..resource_rec.caption[2][1]
             end
             local caption2_id = resource_rec.caption2[1]
