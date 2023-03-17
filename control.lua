@@ -129,6 +129,26 @@ local get_player_rec=function(player_index)
     end
     return global.player_recs[player_index]
 end
+
+function get_sort_prefix(resource_name)
+    log(resource_name)
+    if resource_name:find("%-patch$") ~= nil then -- Deep core mining at the end
+        return "1"
+    end
+    return "0"
+end
+
+function do_sort(player_rec)
+    table.sort(player_rec.resource_order, function (a, b)
+        local a2 = player_rec.translations[a] or a
+        local b2 = player_rec.translations[b] or b
+
+        a2 = get_sort_prefix(a)..a2
+        b2 = get_sort_prefix(b)..b2
+        return a2 < b2
+    end)
+end
+
 local get_player_resource_order=function(player_rec)
     if player_rec.translations then
         if not player_rec.resource_order then
@@ -136,7 +156,7 @@ local get_player_resource_order=function(player_rec)
             for name,resource_rec in pairs(global.resource_recs) do
                 table.insert(player_rec.resource_order,name)
             end
-            table.sort(player_rec.resource_order, function(a,b) return (player_rec.translations[a] or a) < (player_rec.translations[b] or b) end)
+            do_sort(player_rec)
         end
         return player_rec.resource_order
     else
@@ -390,6 +410,9 @@ local hide_ore = function(name)
         return true
     end
     if name:find("^creative%-mod") ~= nil then -- Hide creative mod ores
+        return true
+    end
+    if name:find("%-patch%-ore$") ~= nil or name:find("%-patch%-chunk$") ~= nil then -- Hide deep core mining internal stuff
         return true
     end
     return false
