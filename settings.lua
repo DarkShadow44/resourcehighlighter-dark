@@ -11,10 +11,16 @@ data:extend({
 		default_value = false,
 		setting_type = "runtime-global",
 	},
-     {
+    {
 		type = "bool-setting",
 		name = "resourcehighlighter-show-resource-results",
 		default_value = false,
 		setting_type = "runtime-global",
 	},
+    {
+		type = "bool-setting",
+		name = "resourcehighlighter-remember-selection",
+		default_value = false,
+		setting_type = "runtime-global",
+    },
 })

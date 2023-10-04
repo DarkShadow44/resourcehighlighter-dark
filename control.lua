@@ -495,8 +495,11 @@ local open_gui=function(player,update_search)
                 end
             end
 
-            if settings.global["resourcehighlighter-highlight-all"].value then
-                player_rec.choices[name]=true
+            if not settings.global["resourcehighlighter-remember-selection"].value then
+                player_rec.choices[name]=false
+                if settings.global["resourcehighlighter-highlight-all"].value then
+                    player_rec.choices[name]=true
+                end
             end
 
             local f=table.add({type="flow",direction="horizontal"})
@@ -558,10 +561,6 @@ local close_gui=function(player)
         player_rec.last_update_requested_tick = 0
         player_rec.frame_location=screen.resourcehighlighter_top.location
         screen.resourcehighlighter_top.destroy()
-
-        for name,resource_rec in pairs(global.resource_recs) do
-            player_rec.choices[name]=false
-        end
         player_rec.search_text = ""
         destroy_labels(player)
     end
