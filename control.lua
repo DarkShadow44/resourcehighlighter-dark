@@ -2,10 +2,10 @@ require("resource_map")
 local min_resource_map = resource_highlighter_get_min_resource_map()
 
 local initialize_resources=function()
-    global.resource_recs={}
+    storage.resource_recs={}
     local miner_map={}
 
-    local resources=game.get_filtered_entity_prototypes({{filter = "type", type = "resource"}})
+    local resources=prototypes.get_entity_filtered({{filter = "type", type = "resource"}})
     for name,entity in pairs(resources) do
         local products=entity.mineable_properties.products
         if products and #products>=1 then
@@ -17,12 +17,12 @@ local initialize_resources=function()
             for _,product in ipairs(products) do
                 table.insert(resource_rec.products,{type=product.type,entity_name=entity.name,product_name=product.name})
                 if product.type == "item" then
-                    local protos = game.get_filtered_item_prototypes({{filter = "name", name = product.name}})
+                    local protos =  prototypes.get_item_filtered({{filter = "name", name = product.name}})
                     proto = protos[product.name]
                     resource_rec.caption2 = proto.localised_name
                 end
                 if product.type == "fluid" then
-                    local protos = game.get_filtered_fluid_prototypes({{filter = "name", name = product.name}})
+                    local protos = prototypes.get_fluid_filtered({{filter = "name", name = product.name}})
                     proto = protos[product.name]
                     resource_rec.caption2 = proto.localised_name
                 end
@@ -30,11 +30,11 @@ local initialize_resources=function()
             if entity.mineable_properties.required_fluid then
                 table.insert(resource_rec.ingredients,{type="fluid",name=entity.mineable_properties.required_fluid})
             end
-            global.resource_recs[name]=resource_rec
+            storage.resource_recs[name]=resource_rec
         end
     end
 
-    local miners=game.get_filtered_entity_prototypes({{filter = "type", type = "mining-drill"}})
+    local miners=prototypes.get_entity_filtered({{filter = "type", type = "mining-drill"}})
     for name,entity in pairs(miners) do
         local items=entity.items_to_place_this
         if items and items[1] then
@@ -45,16 +45,16 @@ local initialize_resources=function()
         end
     end
 
-    global.resource_order={}
-    for name,resource_rec in pairs(global.resource_recs) do
-        table.insert(global.resource_order,name)
+    storage.resource_order={}
+    for name,resource_rec in pairs(storage.resource_recs) do
+        table.insert(storage.resource_order,name)
     end
-    table.sort(global.resource_order, function(a,b) return a < b end)
+    table.sort(storage.resource_order, function(a,b) return a < b end)
 
     --Code for showing fuel items beside each resource
     --Removed because it looks too cluttered.
     --local fuel_map={}
-    --local items=game.get_filtered_item_prototypes({{filter = "fuel"}})
+    --local items= prototypes.get_item_filtereds({{filter = "fuel"}})
     --for name,item in pairs(items) do
     --    if item.fuel_category and item.fuel_category~="chemical" then
     --        fuel_map[item.fuel_category]=fuel_map[item.fuel_category] or {}
@@ -82,7 +82,7 @@ local initialize_resources=function()
     --    miner_fuel_map[category]=fuel_items
     --end
 
-    for _,resource_rec in pairs(global.resource_recs) do
+    for _,resource_rec in pairs(storage.resource_recs) do
         resource_rec.miners=miner_map[resource_rec.category] or {}
         --for name,item in pairs(miner_fuel_map[resource_rec.category] or {}) do
         --    table.insert(resource_rec.products_and_ingredients,{type="item",name=name})
@@ -93,20 +93,20 @@ end
 local function init()
     initialize_resources()
 
-    global.player_recs={}
+    storage.player_recs={}
 
-    global.chunk_recs={}
-    global.chunks_to_scan={}
+    storage.chunk_recs={}
+    storage.chunks_to_scan={}
 
-    global.scanned_chunks=0
-    global.scanned_resources=0
+    storage.scanned_chunks=0
+    storage.scanned_resources=0
 
     for _,surface in pairs(game.surfaces) do
         for chunk in surface.get_chunks() do
-            table.insert(global.chunks_to_scan,{surface=surface,position={x=chunk.x,y=chunk.y}})
+            table.insert(storage.chunks_to_scan,{surface=surface,position={x=chunk.x,y=chunk.y}})
         end
     end
-    global.chunks_to_scan_max = #global.chunks_to_scan
+    storage.chunks_to_scan_max = #storage.chunks_to_scan
 end
 
 script.on_init(function()
@@ -114,12 +114,12 @@ script.on_init(function()
 end)
 
 local get_player_rec=function(player_index)
-    if global.player_recs[player_index]==nil then
-        global.player_recs[player_index]={}
-        local player_rec=global.player_recs[player_index]
+    if storage.player_recs[player_index]==nil then
+        storage.player_recs[player_index]={}
+        local player_rec=storage.player_recs[player_index]
         player_rec.frame_location=nil
         player_rec.choices={}
-        for name,resource_rec in pairs(global.resource_recs) do
+        for name,resource_rec in pairs(storage.resource_recs) do
             player_rec.choices[name]=false
         end
         player_rec.chart_tags={}
@@ -127,7 +127,7 @@ local get_player_rec=function(player_index)
         player_rec.last_update_requested_tick = 0
         player_rec.search_text = ""
     end
-    return global.player_recs[player_index]
+    return storage.player_recs[player_index]
 end
 
 function get_sort_prefix(resource_name)
@@ -153,14 +153,14 @@ local get_player_resource_order=function(player_rec)
     if player_rec.translations then
         if not player_rec.resource_order then
             player_rec.resource_order={}
-            for name,resource_rec in pairs(global.resource_recs) do
+            for name,resource_rec in pairs(storage.resource_recs) do
                 table.insert(player_rec.resource_order,name)
             end
             do_sort(player_rec)
         end
         return player_rec.resource_order
     else
-        return global.resource_order
+        return storage.resource_order
     end
 end
 
@@ -169,7 +169,7 @@ local function init_player(player)
 
     if not player_rec.translations then
         player_rec.translations={}
-        for name,resource_rec in pairs(global.resource_recs) do
+        for name,resource_rec in pairs(storage.resource_recs) do
             player.request_translation({"resourcehighlighter-request-translation",name,resource_rec.caption})
             player.request_translation({"resourcehighlighter-request-translation",name,resource_rec.caption2})
         end
@@ -196,14 +196,14 @@ local scan_chunk=function(surface,position)
         return
     end
 
-    global.scanned_chunks=global.scanned_chunks+1
+    storage.scanned_chunks=storage.scanned_chunks+1
 
     local chunk_rec={}
     local resources=surface.find_entities_filtered{
         area={left_top={x=position.x*32,y=position.y*32}, right_bottom={x=(position.x+1)*32,y=(position.y+1)*32}}, type="resource"}
     for _,resource in pairs(resources) do
 
-        global.scanned_resources=global.scanned_resources+1
+        storage.scanned_resources=storage.scanned_resources+1
 
         -- Chunk generation centers all resources between tile boundaries (e.g., 0.5, 1.5, etc.)
         -- even for resources with even widths (e.g., 2, 4, etc.)
@@ -224,25 +224,25 @@ local scan_chunk=function(surface,position)
         end
     end
 
-    global.chunk_recs[surface.index]=global.chunk_recs[surface.index] or {}
-    global.chunk_recs[surface.index][position.x]=global.chunk_recs[surface.index][position.x] or {}
-    global.chunk_recs[surface.index][position.x][position.y]=chunk_rec
+    storage.chunk_recs[surface.index]=storage.chunk_recs[surface.index] or {}
+    storage.chunk_recs[surface.index][position.x]=storage.chunk_recs[surface.index][position.x] or {}
+    storage.chunk_recs[surface.index][position.x][position.y]=chunk_rec
 
 end
 
 local delete_chunk=function(surface,position)
-    if global.chunk_recs[surface.index] and
-       global.chunk_recs[surface.index][position.x] and
-       global.chunk_recs[surface.index][position.x][position.y] then
-           global.chunk_recs[surface.index][position.x][position.y]=nil
+    if storage.chunk_recs[surface.index] and
+       storage.chunk_recs[surface.index][position.x] and
+       storage.chunk_recs[surface.index][position.x][position.y] then
+           storage.chunk_recs[surface.index][position.x][position.y]=nil
     end
 end
 
 local get_chunk_rec=function(surface,position)
-    if global.chunk_recs[surface.index] and
-       global.chunk_recs[surface.index][position.x] and
-       global.chunk_recs[surface.index][position.x][position.y] then
-           return global.chunk_recs[surface.index][position.x][position.y]
+    if storage.chunk_recs[surface.index] and
+       storage.chunk_recs[surface.index][position.x] and
+       storage.chunk_recs[surface.index][position.x][position.y] then
+           return storage.chunk_recs[surface.index][position.x][position.y]
     end
 end
 
@@ -252,7 +252,7 @@ local get_chunk_res=function(params)
         return nil
     end
 
-    local chunk_layer=global.chunk_recs[params.surface.index]
+    local chunk_layer=storage.chunk_recs[params.surface.index]
     if chunk_layer then
         local chunk_col=chunk_layer[params.x]
         if chunk_col then
@@ -326,7 +326,7 @@ local search_chunk_res=function(params,markedStack)
         local amount = originalAmount*currentCount/originalCount;
         local amount_str = amount_to_str(amount);
 
-        if game.item_prototypes["resourcehighlighter-treasure-"..params.name] == nil then
+        if prototypes.item["resourcehighlighter-treasure-"..params.name] == nil then
             return;
         end
 
@@ -363,7 +363,7 @@ local update_labels=function(player)
     destroy_labels(player)
 
     local markedStack={}
-    for s,chunk_layer in pairs(global.chunk_recs) do
+    for s,chunk_layer in pairs(storage.chunk_recs) do
         local surface=game.surfaces[s]
         if surface and surface.valid then
             for x,chunk_col in pairs(chunk_layer) do
@@ -420,7 +420,7 @@ end
 
 local set_all_check_boxes=function(player,state)
     local player_rec=get_player_rec(player.index)
-    for name,resource_rec in pairs(global.resource_recs) do
+    for name,resource_rec in pairs(storage.resource_recs) do
         if not hide_ore(name) then
             player_rec.choices[name]=state
         end
@@ -448,8 +448,8 @@ local open_gui=function(player,update_search)
             top.title_bar.add({type="textfield",visible=false,name="resourcehighlighter_search_text"})
             top.title_bar.resourcehighlighter_search_text.style.width=95
             top.title_bar.resourcehighlighter_search_text.style.top_margin=-3
-            top.title_bar.add({type="sprite-button",sprite="utility/search_white",name="resourcehighlighter_search_button",style="frame_action_button"})
-            top.title_bar.add({type="sprite-button",sprite="utility/close_white",hovered_sprite="utility/close_black",name="resourcehighlighter_close",style="frame_action_button"})
+            top.title_bar.add({type="sprite-button",sprite="utility/search",name="resourcehighlighter_search_button",style="frame_action_button"})
+            top.title_bar.add({type="sprite-button",sprite="utility/close",name="resourcehighlighter_close",style="frame_action_button"})
             top.add({type="scroll-pane",name="scroller"})
             top.scroller.style.vertically_stretchable=true
             top.scroller.style.horizontally_stretchable=true
@@ -476,7 +476,7 @@ local open_gui=function(player,update_search)
                     goto skip_to_next
                 end
             end
-            local resource_rec=global.resource_recs[name]
+            local resource_rec=storage.resource_recs[name]
             local caption_id = resource_rec.caption[1]
             if resource_rec.caption[2] ~= nil and resource_rec.caption[2][1] ~= nil then
                 caption_id = caption_id.."-"..resource_rec.caption[2][1]
@@ -651,15 +651,15 @@ script.on_event(defines.events.on_gui_text_changed, function(event)
 end)
 
 script.on_event(defines.events.on_tick, function(event)
-    while #global.chunks_to_scan>0 and global.scanned_chunks<64 and global.scanned_resources<1024 do
-        local chunk_to_scan=global.chunks_to_scan[#global.chunks_to_scan]
-        global.chunks_to_scan[#global.chunks_to_scan]=nil
+    while #storage.chunks_to_scan>0 and storage.scanned_chunks<64 and storage.scanned_resources<1024 do
+        local chunk_to_scan=storage.chunks_to_scan[#storage.chunks_to_scan]
+        storage.chunks_to_scan[#storage.chunks_to_scan]=nil
         scan_chunk(chunk_to_scan.surface,chunk_to_scan.position)
     end
-    global.scanned_chunks=0
-    global.scanned_resources=0
+    storage.scanned_chunks=0
+    storage.scanned_resources=0
 
-    for player_index,player_rec in pairs(global.player_recs) do
+    for player_index,player_rec in pairs(storage.player_recs) do
         if player_rec.last_update_requested_tick > 0 and event.tick > player_rec.last_update_requested_tick + 30  then -- Only update labels after user stopped dragging the slider for a few ticks
             player_rec.last_update_requested_tick = 0
             local player=game.players[player_index]
@@ -667,19 +667,19 @@ script.on_event(defines.events.on_tick, function(event)
         end
     end
 
-    if global.chunks_to_scan_max > 0 then
-        if global.chunks_to_scan_time == nil then
-            global.chunks_to_scan_time = 0
+    if storage.chunks_to_scan_max > 0 then
+        if storage.chunks_to_scan_time == nil then
+            storage.chunks_to_scan_time = 0
         end
-        global.chunks_to_scan_time = global.chunks_to_scan_time + 1
-        if global.chunks_to_scan_time > 60 * 15 then
-            global.chunks_to_scan_time = 0
-            local percent = math.floor((global.chunks_to_scan_max - #global.chunks_to_scan) / global.chunks_to_scan_max * 100)
+        storage.chunks_to_scan_time = storage.chunks_to_scan_time + 1
+        if storage.chunks_to_scan_time > 60 * 15 then
+            storage.chunks_to_scan_time = 0
+            local percent = math.floor((storage.chunks_to_scan_max - #storage.chunks_to_scan) / storage.chunks_to_scan_max * 100)
             game.print({"resourcehighlighter_scan_percent", percent})
         end
-        if #global.chunks_to_scan == 0 then
+        if #storage.chunks_to_scan == 0 then
             game.print({"resourcehighlighter_scan_complete"})
-            global.chunks_to_scan_max = 0
+            storage.chunks_to_scan_max = 0
         end
     end
 end)
@@ -708,7 +708,7 @@ script.on_event(defines.events.on_player_left_game, function(event)
 end)
 
 script.on_event(defines.events.on_chunk_generated, function(event)
-    table.insert(global.chunks_to_scan,{surface=event.surface,position=event.position})
+    table.insert(storage.chunks_to_scan,{surface=event.surface,position=event.position})
 end)
 
 script.on_event(defines.events.on_chunk_deleted, function(event)

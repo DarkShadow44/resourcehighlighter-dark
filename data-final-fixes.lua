@@ -18,12 +18,8 @@ data:extend {
         type = "shortcut",
         name = "resourcehighlighter-toggle",
         action = "lua",
-        icon = {
-            filename = "__resourcehighlighter-dark__/graphics/icons/shortcut.png",
-            width = 64,
-            height = 64,
-            scale = 1
-        }
+        icon = "__resourcehighlighter-dark__/graphics/icons/shortcut.png",
+        small_icon = "__resourcehighlighter-dark__/graphics/icons/shortcut.png",
     }
 }
 
@@ -40,7 +36,7 @@ for k, v in pairs(data.raw.resource) do
 				},
 				{
 					icon = v.icon or v.icons[1].icon,
-					icon_size = v.icon_size or v.icons[1].icon_size,
+					icon_size = v.icon_size or (v.icons and v.icons[1].icon_size) or 64,
 					scale = 1,
 				}
 			},
@@ -48,7 +44,7 @@ for k, v in pairs(data.raw.resource) do
 			subgroup = "raw-resource",
 			order = "",
 			stack_size = 1,
-			flags = {"hidden"}
+			hidden = true,
 		},
 	}
 end
